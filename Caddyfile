@@ -1,0 +1,3 @@
+{$MATRIX_SERVER_NAME} {
+    reverse_proxy homeserver:{$HOMESERVER_PORT}
+}
