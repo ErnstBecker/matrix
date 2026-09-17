@@ -1,0 +1,42 @@
+services:
+  caddy:
+    image: docker.io/caddy:latest
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    environment:
+      MATRIX_SERVER_NAME: ${MATRIX_SERVER_NAME}
+      HOMESERVER_PORT: ${HOMESERVER_PORT:-8008}
+    networks:
+      - proxy
+    volumes:
+      - ./caddy-data:/data
+      - ./caddy-config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    restart: unless-stopped
+
+  homeserver:
+    image: ghcr.io/continuwuity/continuwuity:latest
+    restart: unless-stopped
+    command: /sbin/conduwuit
+    volumes:
+      - db:/var/lib/continuwuity
+      - ./continuwuity-resolv.conf:/etc/resolv.conf
+    environment:
+      CONTINUWUITY_SERVER_NAME: ${MATRIX_SERVER_NAME}
+      CONTINUWUITY_DATABASE_PATH: /var/lib/continuwuity
+      CONTINUWUITY_ADDRESS: 0.0.0.0
+      CONTINUWUITY_PORT: ${HOMESERVER_PORT:-8008}
+      CONTINUWUITY_WELL_KNOWN: |
+          {
+          client=https://${MATRIX_SERVER_NAME},
+          server=${MATRIX_SERVER_NAME}:443
+          }
+    networks:
+      - proxy
+
+networks:
+  proxy:
+
+volumes:
+  db:
