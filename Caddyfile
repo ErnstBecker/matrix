@@ -1,3 +1,7 @@
 {$MATRIX_SERVER_NAME} {
     reverse_proxy homeserver:{$HOMESERVER_PORT}
 }
+
+{$MATRIX_SERVER_NAME}:{$ELEMENT_PORT} {
+    reverse_proxy element:80
+}
