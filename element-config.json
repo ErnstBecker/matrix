@@ -1,7 +1,0 @@
-{
-  "default_server_name": "unix-matrix.duckdns.org",
-  "brand": "Element",
-  "disable_custom_urls": false,
-  "disable_guests": true,
-  "showLabsSettings": true
-}
